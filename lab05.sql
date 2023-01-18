@@ -1,0 +1,143 @@
+-- Put in a header
+
+--STUDENT NAME: Marco Pasqua
+
+--STUDENT ID: 100497213
+
+--STUDENT ORACLE ID: dbs211_221h32
+
+--//PART A – Transactions
+
+--Question 1
+--1)The user has established a new connection to the server and has a blank sheet ready to go, starts a new transaction
+--
+--2)The user uses the BEGIN statement in Oracle SQL, this will start a new transaction
+--
+--3)The user executes a COMMIT statement, the current transaction is commited, and a new transaction starts.
+--
+--4)The user executes ANY DDL statement.  This automatically triggers an auto-commit of the current transaction and starts a new transaction.
+
+--Question 2
+CREATE TABLE newEmp32
+AS (SELECT * FROM EMPLOYEES WHERE 1=2);
+
+--Question 3
+--SET AUTOCOMMIT OFF;
+--SET TRANSACTION READ WRITE;
+
+SET AUTOCOMMIT OFF;
+SET TRANSACTION READ WRITE;
+
+--Question 4
+INSERT ALL
+INTO NEWEMP32(EMPLOYEE_ID, LAST_NAME, FIRST_NAME, EMAIL, SALARY, DEPARTMENT_ID, MANAGER_ID, JOB_ID, HIRE_DATE)
+VALUES (100,'Patel','Ralph','rpatel@mail.com',8500,80,NULL,'Sales Rep',SYSDATE)
+INTO NEWEMP32(EMPLOYEE_ID, LAST_NAME, FIRST_NAME, EMAIL, SALARY, DEPARTMENT_ID, MANAGER_ID, JOB_ID, HIRE_DATE)
+VALUES (101,'Denis','Betty','bdenis@mail.com',8000,80,NULL,'Sales Rep',SYSDATE)
+INTO NEWEMP32(EMPLOYEE_ID, LAST_NAME, FIRST_NAME, EMAIL, SALARY, DEPARTMENT_ID, MANAGER_ID, JOB_ID, HIRE_DATE)
+VALUES (102,'Biri','Ben','bbirir@mail.com',9300,20,NULL,'Sales Rep',SYSDATE)
+INTO NEWEMP32(EMPLOYEE_ID, LAST_NAME, FIRST_NAME, EMAIL, SALARY, DEPARTMENT_ID, MANAGER_ID, JOB_ID, HIRE_DATE)
+VALUES (103,'Newman','Chad','cnewman@mail.com',5000,50,NULL,'Sales Rep',SYSDATE)
+INTO NEWEMP32(EMPLOYEE_ID, LAST_NAME, FIRST_NAME, EMAIL, SALARY, DEPARTMENT_ID, MANAGER_ID, JOB_ID, HIRE_DATE)
+VALUES (104,'Marco','Pasqua','mpasqua@mail.com',8900,60,NULL,'Sales Rep',SYSDATE)
+SELECT 1 FROM DUAL;
+
+--Question 5
+SELECT * from newemp32;
+
+--Question 6
+ROLLBACK;
+
+--Question 7
+COMMIT;
+SELECT * from newemp32;
+
+--Question 8
+UPDATE newemp32
+SET job_id = 'unknown';
+
+--Question 9
+COMMIT;
+
+--Question 10
+ROLLBACK;
+--10a)
+SELECT * from newemp32
+WHERE job_id = 'unknown';
+
+--10b)
+--No the rollback was not effective since a commit was issued before the rollback was issued.
+
+--10c)
+--The rollback from question 6 changed the table back to what it originally was before the insert and before a commit was used, which was where there was no data in it.
+--However, in question 10 the rollback did nothing since commit was issued before I got the chance to use a rollback
+
+--Question 11
+DELETE FROM newemp32;
+
+--Question 12
+CREATE VIEW vwNewEmp32 AS
+SELECT * FROM newemp32 ORDER BY last_name, first_name;
+
+--Question 13
+ROLLBACK;
+
+--Question 13a)
+SELECT * FROM newemp32;
+--No rows were selected, meaning there are no employees in newemp32
+
+--Question 13 b)
+--The rollback was not effective, due to it only bringing back the newemp32 table, but with none of the data of the employees in it
+
+--Question 14
+INSERT ALL
+INTO NEWEMP32(EMPLOYEE_ID, LAST_NAME, FIRST_NAME, EMAIL, SALARY, DEPARTMENT_ID, MANAGER_ID, JOB_ID, HIRE_DATE)
+VALUES (100,'Patel','Ralph','rpatel@mail.com',8500,80,NULL,'Sales Rep',SYSDATE)
+INTO NEWEMP32(EMPLOYEE_ID, LAST_NAME, FIRST_NAME, EMAIL, SALARY, DEPARTMENT_ID, MANAGER_ID, JOB_ID, HIRE_DATE)
+VALUES (101,'Denis','Betty','bdenis@mail.com',8000,80,NULL,'Sales Rep',SYSDATE)
+INTO NEWEMP32(EMPLOYEE_ID, LAST_NAME, FIRST_NAME, EMAIL, SALARY, DEPARTMENT_ID, MANAGER_ID, JOB_ID, HIRE_DATE)
+VALUES (102,'Biri','Ben','bbirir@mail.com',9300,20,NULL,'Sales Rep',SYSDATE)
+INTO NEWEMP32(EMPLOYEE_ID, LAST_NAME, FIRST_NAME, EMAIL, SALARY, DEPARTMENT_ID, MANAGER_ID, JOB_ID, HIRE_DATE)
+VALUES (103,'Newman','Chad','cnewman@mail.com',5000,50,NULL,'Sales Rep',SYSDATE)
+INTO NEWEMP32(EMPLOYEE_ID, LAST_NAME, FIRST_NAME, EMAIL, SALARY, DEPARTMENT_ID, MANAGER_ID, JOB_ID, HIRE_DATE)
+VALUES (104,'Marco','Pasqua','mpasqua@mail.com',8900,60,NULL,'Sales Rep',SYSDATE)
+SELECT 1 FROM DUAL;
+
+--Question 15
+SAVEPOINT insertion;
+
+--Question 16
+UPDATE newemp32 SET job_id = 'unknown';
+SELECT * FROM newemp32;
+
+--Question 17
+ROLLBACK TO SAVEPOINT insertion;
+SELECT * FROM newemp32;
+--This rolled back to before the job_id was set to being unknown, so it rolled back to when the data was inserted, as pointed out by the name insertion.
+
+--Question 18
+ROLLBACK;
+SELECT * FROM newemp32;
+--This rolled back to when there was no data in the table
+
+--Question 19
+REVOKE ALL
+ON NEWEMP32
+FROM PUBLIC;
+
+--Question 20
+GRANT SELECT 
+    ON newemp32 TO dbs211_221h31;
+
+--Question 21
+GRANT INSERT, UPDATE, DELETE
+    ON newemp32 TO dbs211_221h31;
+
+--Question 22
+REVOKE ALL
+ON newemp32
+FROM dbs211_221h31;
+
+--Question 23
+DROP VIEW vwNewEmp32;
+DROP TABLE newemp32;
